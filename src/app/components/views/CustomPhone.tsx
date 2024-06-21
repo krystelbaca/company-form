@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
-const CustomPhoneInput = styled(PhoneInput)`
+const PhoneStyle = styled(PhoneInput)`
   .react-tel-input .form-control {
     box-sizing: border-box;
     display: flex;
@@ -41,5 +41,28 @@ const CustomPhoneInput = styled(PhoneInput)`
     padding: 8px;
   }
 `;
+
+interface CustomPhoneInputProps {
+  country: string;
+  value: string;
+  onChange: (value: string) => void;
+}
+
+const CustomPhoneInput: React.FC<CustomPhoneInputProps> = ({ country, value, onChange }) => {
+  return (
+    <PhoneInput
+      country={country}
+      value={value}
+      onChange={onChange}
+      inputStyle={{
+        width: '100%',
+        padding: '0.5rem',
+        fontSize: '1rem',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+      }}
+    />
+  );
+};
 
 export default CustomPhoneInput;

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 import { useMyContext } from '../Context';
 
@@ -26,7 +26,6 @@ const NameContainer = styled.div`
   margin-bottom: 1rem;
 `;
 
-
 const Button = styled.button`
   padding: 0.5rem;
   font-size: 1rem;
@@ -43,53 +42,61 @@ const ErrorMessage = styled.span`
   margin-bottom: 1rem;
 `;
 
-const ContactPerson = () => {
-  const { value, setValue } = useMyContext();
-  const [email, setEmail] = useState('');
+const ContactPerson = ({ nextStep }: { nextStep: () => void }) => {
+  const { formData, setFormData, setCompletedSteps, completedSteps } = useMyContext();
   const [emailError, setEmailError] = useState('');
-  const [phone, setPhone] = useState('');
-
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
   };
+  
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setEmail(value);
-
-    if (!validateEmail(value)) {
+    if (id === 'email' && !validateEmail(value)) {
       setEmailError('Make sure your email is a well-formed address');
     } else {
       setEmailError('');
     }
   };
 
+  const handlePhoneChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, phone: value }));
+  };
+
+  const handleContinue = () => {
+    if (!completedSteps.includes(2)) {
+      setCompletedSteps([...completedSteps, 2]);
+    }
+    nextStep();
+  };
+
   return (
     <FormContainer>
       <label htmlFor="name">Name</label>
       <NameContainer>
-        <Input id="firstName" type="text" placeholder="First name" />
-        <Input id="lastName" type="text" placeholder="Last name" />
+        <Input id="firstName" type="text" placeholder="First name" value={formData.firstName} onChange={handleChange}/>
+        <Input id="lastName" type="text" placeholder="Last name" value={formData.lastName} onChange={handleChange}/>
       </NameContainer>
       <label htmlFor="email">Email</label>
       <Input
         id="email"
         type="text"
         placeholder="Email"
-        value={email}
-        onChange={handleEmailChange}
+        value={formData.email}
+        onChange={handleChange}
         style={{ borderColor: emailError ? 'red' : '#ccc' }}
       />
       {emailError && <ErrorMessage>{emailError}</ErrorMessage>}
       <label htmlFor="phone">Phone</label>
       <CustomPhoneInput
         country={'us'}
-        value={phone}
-        onChange={setPhone}
+        value={formData.phone}
+        onChange={handlePhoneChange}
       />
-      <Button>Continue</Button>
+      <Button onClick={handleContinue}>Continue</Button>
     </FormContainer>
   );
 };
