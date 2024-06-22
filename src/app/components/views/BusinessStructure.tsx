@@ -1,6 +1,5 @@
 'use client';
 
-import { ChangeEvent } from 'react';
 import { useMyContext } from '../Context';
 
 import styled from 'styled-components';
@@ -27,10 +26,10 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const BusinessStructure = ({ nextStep }: { nextStep: () => void }) => {
-  const { formData, setFormData, setCompletedSteps, completedSteps } = useMyContext();
+const BusinessStructure = () => {
+  const { formData, setFormData, nextStep, setCompletedSteps, completedSteps } = useMyContext();
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };

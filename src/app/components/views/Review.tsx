@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useMyContext } from '../Context';
 
 import styled from 'styled-components';
@@ -50,14 +49,18 @@ const LinkButton = styled.button`
   text-decoration: underline;
 `;
 
-const ReviewAndSubmit =  ({ prevStep }: { prevStep: () => void }) => {
+const ReviewAndSubmit =  () => {
   const { formData, setStep } = useMyContext();
+
+  const handleEditClick = (step: number) => {
+    setStep(step);
+  };
 
   return (
     <FormContainer>
       <BusinessContainer>
         <span>Business structure</span>
-        <LinkButton onClick={() => setStep(1)}>Edit</LinkButton>
+        <LinkButton onClick={() => handleEditClick(1)}>Edit</LinkButton>
       </BusinessContainer>
       <p>Name: {formData.businessName}</p>
       <p>Type: {formData.type}</p>
@@ -65,7 +68,7 @@ const ReviewAndSubmit =  ({ prevStep }: { prevStep: () => void }) => {
 
       <ContactPerson>
         <span>Contact person</span>
-        <LinkButton onClick={() => setStep(2)}>Edit</LinkButton>
+        <LinkButton onClick={() => handleEditClick(2)}>Edit</LinkButton>
       </ContactPerson>
       <p>Name: {formData.firstName} {formData.lastName}</p>
       <p>Email: {formData.email}</p>

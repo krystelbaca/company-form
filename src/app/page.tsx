@@ -1,25 +1,19 @@
 'use client';
-import { useState } from 'react';
+import { useMyContext } from '@/app/components/Context';
 import Layout from "./components/Container";
 import BusinessStructure from "./components/views/BusinessStructure"; 
 import ContactPerson from "./components/views/ContactPerson";
 import ReviewAndSubmit from "./components/views/Review";
-import { Context } from '@/app/components/Context';
 
 const Page = () => {
-  const [step, setStep] = useState(1);
-
-  const nextStep = () => setStep((prev) => prev + 1);
-  const prevStep = () => setStep((prev) => prev - 1);
+  const { step } = useMyContext();
 
   return (
-    <Context>
-      <Layout>
-        {step === 1 && <BusinessStructure nextStep={nextStep} />}
-        {step === 2 && <ContactPerson nextStep={nextStep} />}
-        {step === 3 && <ReviewAndSubmit prevStep={prevStep} />}
-      </Layout>
-    </Context>
+    <Layout>
+      {step === 1 && <BusinessStructure />}
+      {step === 2 && <ContactPerson />}
+      {step === 3 && <ReviewAndSubmit />}
+    </Layout>
   );
 };
 

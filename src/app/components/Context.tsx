@@ -20,6 +20,8 @@ interface MyContextProps {
   setFormData: (formData: FormData) => void;
   step: number;
   setStep: (step: number) => void;
+  nextStep: () => void;
+  prevStep: () => void;
   completedSteps: number[];
   setCompletedSteps: (steps: number[]) => void;
 };
@@ -44,12 +46,21 @@ export const Context = ({ children }: { children: ReactNode }) => {
   const [formData, setFormData] = useState<FormData>(defaultFormData);
   const [step, setStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+
+  const nextStep = () => {
+    setStep((prev) => prev + 1);
+  };
+
+  const prevStep = () => setStep((prev) => prev - 1);
+
   return (
     <MyContext.Provider value={{ 
         formData,
         setFormData,
         step, 
         setStep,
+        nextStep,
+        prevStep,
         completedSteps, 
         setCompletedSteps
       }}>

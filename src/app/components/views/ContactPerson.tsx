@@ -42,8 +42,8 @@ const ErrorMessage = styled.span`
   margin-bottom: 1rem;
 `;
 
-const ContactPerson = ({ nextStep }: { nextStep: () => void }) => {
-  const { formData, setFormData, setCompletedSteps, completedSteps } = useMyContext();
+const ContactPerson = () => {
+  const { formData, setFormData, nextStep, setCompletedSteps, completedSteps } = useMyContext();
   const [emailError, setEmailError] = useState('');
 
   const validateEmail = (email: string) => {
