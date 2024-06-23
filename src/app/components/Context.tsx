@@ -1,6 +1,10 @@
-"use client";
+'use client';
 
 import { createContext, useContext, useState, ReactNode } from 'react';
+import { companyTypes } from '../../data/companyTypes';
+import { states } from '../../data/states'
+import { countries } from '../../data/countries';
+import { State, CompanyType, Country } from '../../types/index';
 
 interface FormData {
   businessName: string;
@@ -24,6 +28,9 @@ interface MyContextProps {
   prevStep: () => void;
   completedSteps: number[];
   setCompletedSteps: (steps: number[]) => void;
+  states: State[];
+  companyTypes: string[];
+  countries: Country[];
 };
 
 const defaultFormData: FormData = {
@@ -62,7 +69,10 @@ export const Context = ({ children }: { children: ReactNode }) => {
         nextStep,
         prevStep,
         completedSteps, 
-        setCompletedSteps
+        setCompletedSteps,
+        states,
+        companyTypes,
+        countries
       }}>
       {children}
     </MyContext.Provider>
