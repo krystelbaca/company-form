@@ -1,9 +1,7 @@
 "use client";
 
 import { useMyContext } from './Context';
-
 import styled from 'styled-components';
-
 import Image from 'next/image';
 
 const SidebarContainer = styled.aside`
@@ -12,6 +10,13 @@ const SidebarContainer = styled.aside`
   padding: 20px;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+
+  @media (max-width: 768px) {
+    width: 60px;
+    padding: 10px;
+    align-items: center;
+  }
 `;
 
 const Step = styled.div<{ $isActive: boolean; $isCompleted: boolean }>`
@@ -22,6 +27,11 @@ const Step = styled.div<{ $isActive: boolean; $isCompleted: boolean }>`
   cursor: pointer;
   color: ${(props) => (props.$isActive ? '#6200ea' : '#000')};
   font-weight: ${(props) => (props.$isActive ? 'bold' : 'normal')};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    font-size: 14px;
+  }
 `;
 
 const StepNumber = styled.div<{ $isCompleted: boolean }>`
@@ -31,17 +41,21 @@ const StepNumber = styled.div<{ $isCompleted: boolean }>`
   color: white;
   border-radius: 50%;
   display: flex;
-  display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 10px;
-  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    margin-right: 0;
+  }
 `;
 
 const StepLabel = styled.span`
   font-size: 16px;
-  display: flex;
-  align-items: center;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const Sidebar = () => {

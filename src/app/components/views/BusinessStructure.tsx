@@ -4,6 +4,8 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 
 import { useMyContext } from '../Context';
 
+import Image from 'next/image';
+
 import styled from 'styled-components';
 interface InputProps {
   isInvalid?: boolean;
@@ -16,15 +18,23 @@ const FormContainer = styled.form`
   max-width: 410px;
   margin: 0 auto;
   padding: 1rem;
-  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+    max-width: 100%;
+  }
 `;
 
 const Input = styled.input<InputProps>`
   margin-bottom: 1rem;
   padding: 0.5rem;
   font-size: 1rem;
-  border-radius: 6px; 
   border: ${(props) => (props.isInvalid ? '2px solid red' : '1px solid #ccc')};
+  border-radius: 6px;
+
+  @media (max-width: 768px) {
+    font-size: 0.875rem;
+  }
 `;
 
 const Select = styled.select<InputProps>`
@@ -44,22 +54,22 @@ const Button = styled.button`
   cursor: pointer;
   width: 100%;
   border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 const IconWrapper = styled.span`
   margin-left: 0.5rem;
-  display: flex;
   align-items: center;
 `;
 
-const StateContainer = styled.div`
+const StateZipContainer = styled.div`
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
-`
+
+  & > * {
+    flex: 1;
+  }
+`;
 
 const ErrorMessage = styled.span`
   color: red;
@@ -124,7 +134,9 @@ const BusinessStructure = () => {
 
       <label htmlFor="type">Type</label>
       <Select id="type" value={formData.type} onChange={handleChange} required isInvalid={validationErrors.type}>
-        <option value="">Type of Business</option>
+        <option value="" disabled hidden>
+          Type of Business
+        </option>
         {companyTypes.map((companyType, index) => (
           <option key={index} value={companyType}>
             {companyType}
@@ -165,9 +177,9 @@ const BusinessStructure = () => {
       {validationErrors.city && <ErrorMessage>Required field</ErrorMessage>}
 
       <label htmlFor="state">State</label>
-      <StateContainer>
+      <StateZipContainer>
         <Select id="state" value={formData.state} onChange={handleChange} required isInvalid={validationErrors.state}>
-          <option value="">State</option>
+          <option value="" disabled hidden>State</option>
           {states.map((state) => (
             <option key={state.abbreviation} value={state.abbreviation}>
               {state.name}
@@ -187,25 +199,13 @@ const BusinessStructure = () => {
           pattern="\d{5}"
         />
         {validationErrors.zip && <ErrorMessage>Required field</ErrorMessage>}
-      </StateContainer>
+      </StateZipContainer>
 
       <Button type="submit">
         Continue
         <IconWrapper>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-arrow-right"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fillRule="evenodd"
-              d="M1 8a.5.5 0 0 1 .5-.5h11.793L9.146 3.354a.5.5 0 1 1 .708-.708l4.5 4.5a.5.5 0 0 1 0 .708l-4.5 4.5a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
-            />
-          </svg>
-        </IconWrapper>
+          <Image src="/Fill/arrow-left.png" alt="Arrow Right" width={16} height={16} />
+        </IconWrapper> 
       </Button>
     </FormContainer>
   );

@@ -20,21 +20,15 @@ const FormContainer = styled.form`
   box-sizing: border-box;
 `;
 
-const Input = styled.input`
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  font-size: 1rem;
+const SectionTitle = styled.span`
+  font-size: 18px;
+  font-weight: 500;
 `;
 
-const BusinessContainer = styled.div`
+const SectionContainer = styled.div`
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-`;
-
-const ContactPerson = styled.div`
-  display: flex;
-  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
 `;
 
@@ -54,21 +48,40 @@ const IconWrapper = styled.span`
   align-items: center;
 `;
 
+const DetailLabel = styled.span`
+  color: #bfbfbf;
+  justify-text: right;
+`;
+
+const DetailValue = styled.span`
+  color: black;
+  justify-content: center;
+`;
+
+const DetailRow = styled.p`
+  margin: 0;
+  padding: 10px;
+  display: flex;
+  gap: 0.5rem;
+  
+`;
+
 const LinkButton = styled.button`
-  padding: 0.5rem;
   font-size: 1rem;
   background-color: transparent;
   color: #4A3AFF;
   border: none;
   cursor: pointer;
   text-decoration: underline;
+  padding: 0;
 `;
 
 const SuccessMessage = styled.div`
-  padding: 1rem;
-  background-color: #e6ffee;
-  color: #004d00;
-  border: 1px solid #004d00;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: ${(props) => (props.error ? '#f8d7da' : '#d4edda')};
+  color: ${(props) => (props.error ? '#EF4444' : '#155724')};
+  border: 1px solid ${(props) => (props.error ? '#EF4444' : '#c3e6cb')};
   border-radius: 6px;
   margin-bottom: 1rem;
 `;
@@ -94,8 +107,13 @@ const ReviewAndSubmit =  () => {
       }
 
       return response.data.message
-    } catch (error) {
-      return error
+    } catch (error: any) {
+      setIsSubmitted(true);
+      if (error.response?.status === 500) {
+        setSuccessMessage('Sorry, we are having technical issues. Try again.');
+      } else {
+        setSuccessMessage(error.response?.data.message || 'An error occurred. Please try again.');
+      }
     }
   };
 
@@ -121,32 +139,31 @@ const ReviewAndSubmit =  () => {
 
   return (
     <FormContainer onSubmit={handleSubmit}>
-      <BusinessContainer>
-        <span>Business structure</span>
-        <LinkButton onClick={() => handleEditClick(1)}>Edit</LinkButton>
-      </BusinessContainer>
-      <p>Name: {formData.businessName}</p>
-      <p>Type: {formData.type}</p>
-      <p>Address: {formData.address1}, {formData.address2}, {formData.city}, {formData.state}, {formData.zip}</p>
+      <SectionContainer>
+        <SectionTitle>Business structure</SectionTitle>
+        <LinkButton type="button" onClick={() => handleEditClick(1)}>Edit</LinkButton>
+      </SectionContainer>
+      <DetailRow><DetailLabel>Name:</DetailLabel><DetailValue>{formData.businessName}</DetailValue></DetailRow>
+      <DetailRow><DetailLabel>Type:</DetailLabel><DetailValue>{formData.type}</DetailValue></DetailRow>
+      <DetailRow><DetailLabel>Address:</DetailLabel><DetailValue>{formData.address1}, {formData.address2}, {formData.city}, {formData.state}, {formData.zip}</DetailValue></DetailRow>
 
-      <ContactPerson>
-        <span>Contact person</span>
-        <LinkButton onClick={() => handleEditClick(2)}>Edit</LinkButton>
-      </ContactPerson>
-      <p>Name: {formData.firstName} {formData.lastName}</p>
-      <p>Email: {formData.email}</p>
-      <p>Phone: {formData.phone}</p>
+      <SectionContainer>
+        <SectionTitle>Contact person</SectionTitle>
+        <LinkButton type="button" onClick={() => handleEditClick(2)}>Edit</LinkButton>
+      </SectionContainer>
+      <DetailRow><DetailLabel>Name:</DetailLabel><DetailValue>{formData.firstName} {formData.lastName}</DetailValue></DetailRow>
+      <DetailRow><DetailLabel>Email:</DetailLabel><DetailValue>{formData.email}</DetailValue></DetailRow>
+      <DetailRow><DetailLabel>Phone:</DetailLabel><DetailValue>{formData.phone}</DetailValue></DetailRow>
+      {isSubmitted && (
+        <SuccessMessage error={successMessage.includes('technical issues') || successMessage.includes('A company with the same name has been detected')}>
+          {successMessage}
+        </SuccessMessage>
+      )}
       <Button type="submit" onClick={isSubmitted ? handleStartOver : undefined}>
-        {isSubmitted ? 'Start Over' : 'Confirm & Submit'}
         <IconWrapper>
           <Image src="/Fill/arrow-left.png" alt="Arrow Right" width={16} height={16} />
         </IconWrapper>
       </Button>
-      {isSubmitted && (
-        <SuccessMessage>
-          {successMessage}
-        </SuccessMessage>
-      )}
     </FormContainer>
   );
 };

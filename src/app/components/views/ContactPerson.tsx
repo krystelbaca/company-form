@@ -7,6 +7,8 @@ import styled from 'styled-components';
 
 import Image from 'next/image';
 
+import InputMask from 'react-input-mask';
+
 interface InputProps {
   isInvalid?: boolean;
 }
@@ -44,9 +46,18 @@ const NameContainer = styled.div`
 `;
 
 const PhoneContainer = styled.div`
-  display: flex;
+display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
+  align-items: center;
+
+  & > select {
+    flex: 0 0 100px; /* Fixed width for the country select */
+  }
+
+  & > input {
+    flex: 1; /* The phone input takes up the remaining space */
+  }
 `;
 
 const Button = styled.button`
@@ -89,6 +100,12 @@ const ContactPerson = () => {
     return re.test(String(email).toLowerCase());
   };
 
+  const validatePhone = (phone: string) => {
+    const cleanedPhone = phone.replace(/\D/g, '');
+    return cleanedPhone.length === 10;
+  };
+
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
@@ -111,6 +128,10 @@ const ContactPerson = () => {
         newValidationErrors[field] = true;
       }
     });
+
+    if (!validatePhone(formData.phone)) {
+      newValidationErrors['phone'] = true;
+    }
 
     if (Object.keys(newValidationErrors).length > 0) {
       setValidationErrors(newValidationErrors);
@@ -165,7 +186,7 @@ const ContactPerson = () => {
       <label htmlFor="phone">Phone</label>
       <PhoneContainer>
         <Select id="country" value={formData.country} onChange={handleChange} required isInvalid={validationErrors.country}>
-          <option value=''>(+111)</option>
+          <option value="" disabled hidden></option>
           {countries.map((country) => (
             <option key={country.name} value={country.name}>
               ({country.phone_code})
@@ -173,17 +194,24 @@ const ContactPerson = () => {
           ))}
         </Select>
         {validationErrors.country && <ErrorMessage>Required field</ErrorMessage>}
-
-        <Input 
-          type="tel" 
-          id="phone" 
-          name="phone" 
-          value={formData.phone}
-          placeholder="(555) 000-000"
-          required
-          isInvalid={validationErrors.phone}
-          onChange={handleChange}
-        />
+        
+        <InputMask 
+          mask="(999) 999-9999" 
+          value={formData.phone} 
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
+        >
+          {(inputProps: any) => (
+            <Input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="(555) 000-000"
+              required
+              isInvalid={validationErrors.phone}
+              {...inputProps}
+            />
+          )}
+        </InputMask>
         {validationErrors.phone && <ErrorMessage>Required field</ErrorMessage>}
       </PhoneContainer>
 

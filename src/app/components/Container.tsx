@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from 'react';
 import styled from 'styled-components';
@@ -9,23 +9,26 @@ const ContainerWrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow: hidden;
+
 `;
 
 const MainContent = styled.main`
   display: flex;
   flex-grow: 1;
-  position: relative;
-  overflow: hidden;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const Content = styled.section`
-  width: 410px
-  height: auto
+  flex-grow: 1;
   padding: 20px;
   overflow-y: auto;
-  position: absolute;
-  left: 434px;
+
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 const Container = ({ children }: { children: React.ReactNode }) => (
