@@ -16,13 +16,14 @@ const FormContainer = styled.form`
   max-width: 410px;
   margin: 0 auto;
   padding: 1rem;
+  box-sizing: border-box;
 `;
 
 const Input = styled.input<InputProps>`
   margin-bottom: 1rem;
   padding: 0.5rem;
   font-size: 1rem;
-  border-radius: 6px;
+  border-radius: 6px; 
   border: ${(props) => (props.isInvalid ? '2px solid red' : '1px solid #ccc')};
 `;
 
@@ -123,7 +124,7 @@ const BusinessStructure = () => {
 
       <label htmlFor="type">Type</label>
       <Select id="type" value={formData.type} onChange={handleChange} required isInvalid={validationErrors.type}>
-        <option value="">Select a type</option>
+        <option value="">Type of Business</option>
         {companyTypes.map((companyType, index) => (
           <option key={index} value={companyType}>
             {companyType}
@@ -166,7 +167,7 @@ const BusinessStructure = () => {
       <label htmlFor="state">State</label>
       <StateContainer>
         <Select id="state" value={formData.state} onChange={handleChange} required isInvalid={validationErrors.state}>
-          <option value="">Select a state</option>
+          <option value="">State</option>
           {states.map((state) => (
             <option key={state.abbreviation} value={state.abbreviation}>
               {state.name}

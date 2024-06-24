@@ -9,17 +9,23 @@ const ContainerWrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
+  overflow: hidden;
 `;
 
 const MainContent = styled.main`
   display: flex;
   flex-grow: 1;
+  position: relative;
+  overflow: hidden;
 `;
 
 const Content = styled.section`
-  flex-grow: 1;
+  width: 410px
+  height: auto
   padding: 20px;
   overflow-y: auto;
+  position: absolute;
+  left: 434px;
 `;
 
 const Container = ({ children }: { children: React.ReactNode }) => (

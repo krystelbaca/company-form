@@ -1,11 +1,19 @@
 'use client';
+import { 
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode 
+} from 'react';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
 import { companyTypes } from '../../data/companyTypes';
-import { states } from '../../data/states'
-import { countries } from '../../data/countries';
-import { State, CompanyType, Country } from '../../types/index';
 
+import { states } from '../../data/states'
+
+import { countries } from '../../data/countries';
+
+import { State, CompanyType, Country } from '../../types/index';
 interface FormData {
   businessName: string;
   type: string;
@@ -52,11 +60,35 @@ const defaultFormData: FormData = {
 const MyContext = createContext<MyContextProps | undefined>(undefined);
 
 export const Context = ({ children }: { children: ReactNode }) => {
-  const [formData, setFormData] = useState<FormData>(defaultFormData);
-  const [step, setStep] = useState(1);
-  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [formData, setFormData] = useState<FormData>(() => {
+    const savedFormData = localStorage.getItem('formData');
+    return savedFormData ? JSON.parse(savedFormData) : defaultFormData;
+  });
+
+  const [step, setStep] = useState<number>(() => {
+    const savedStep = localStorage.getItem('step');
+    return savedStep ? parseInt(savedStep, 10) : 1;
+  });
+
+    const [completedSteps, setCompletedSteps] = useState<number[]>(() => {
+    const savedCompletedSteps = localStorage.getItem('completedSteps');
+    return savedCompletedSteps ? JSON.parse(savedCompletedSteps) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('formData', JSON.stringify(formData));
+  }, [formData]);
+
+  useEffect(() => {
+    localStorage.setItem('step', step.toString());
+  }, [step]);
+
+  useEffect(() => {
+    localStorage.setItem('completedSteps', JSON.stringify(completedSteps));
+  }, [completedSteps]);
 
   const nextStep = () => {
+    setCompletedSteps((prev) => [...new Set([...prev, step])]);
     setStep((prev) => prev + 1);
   };
 

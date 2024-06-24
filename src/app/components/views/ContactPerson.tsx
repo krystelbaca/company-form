@@ -18,6 +18,7 @@ const FormContainer = styled.form`
   max-width: 410px;
   margin: 0 auto;
   padding: 1rem;
+  box-sizing: border-box;
 `;
 
 const Input = styled.input<InputProps>`

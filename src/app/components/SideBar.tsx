@@ -1,19 +1,18 @@
 "use client";
 
 import { useMyContext } from './Context';
+
 import styled from 'styled-components';
+
 import Image from 'next/image';
 
 const SidebarContainer = styled.aside`
   width: 250px;
   background-color: #ffffff;
   padding: 20px;
-  border-right: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
-  align-items: center;
 `;
-
 
 const Step = styled.div<{ $isActive: boolean; $isCompleted: boolean }>`
   margin: 10px 0;
@@ -32,13 +31,17 @@ const StepNumber = styled.div<{ $isCompleted: boolean }>`
   color: white;
   border-radius: 50%;
   display: flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 10px;
+  flex-shrink: 0;
 `;
 
 const StepLabel = styled.span`
   font-size: 16px;
+  display: flex;
+  align-items: center;
 `;
 
 const Sidebar = () => {
