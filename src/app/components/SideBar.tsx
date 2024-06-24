@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 const SidebarContainer = styled.aside`
   width: 250px;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   padding: 20px;
   border-right: 1px solid #e0e0e0;
   display: flex;
@@ -53,24 +53,23 @@ const Sidebar = () => {
 
   return (
     <SidebarContainer>
-        <Step $isActive={step === 1} $isCompleted={completedSteps.includes(1)} onClick={() => setStep(1)}>
-          <StepNumber $isCompleted={completedSteps.includes(1)}>
-            {renderStepIcon(1)}
+      {[1, 2, 3].map((stepNumber) => (
+        <Step
+          key={stepNumber}
+          $isActive={step === stepNumber}
+          $isCompleted={completedSteps.includes(stepNumber)}
+          onClick={() => setStep(stepNumber)}
+        >
+          <StepNumber $isCompleted={completedSteps.includes(stepNumber)}>
+            {renderStepIcon(stepNumber)}
           </StepNumber>
-          <StepLabel>Business structure</StepLabel>
+          <StepLabel>
+            {stepNumber === 1 ? 'Business structure' :
+             stepNumber === 2 ? 'Contact person' :
+             'Review & submit'}
+          </StepLabel>
         </Step>
-        <Step $isActive={step === 2} $isCompleted={completedSteps.includes(2)} onClick={() => setStep(2)}>
-          <StepNumber $isCompleted={completedSteps.includes(2)}>
-            {renderStepIcon(2)}
-          </StepNumber>
-          <StepLabel>Contact person</StepLabel>
-        </Step>
-        <Step $isActive={step === 3} $isCompleted={completedSteps.includes(3)} onClick={() => setStep(3)}>
-          <StepNumber $isCompleted={completedSteps.includes(3)}>
-            {renderStepIcon(3)}
-          </StepNumber>
-          <StepLabel>Review & submit</StepLabel>
-        </Step>
+      ))}
     </SidebarContainer>
   );
 };

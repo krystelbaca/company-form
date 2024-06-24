@@ -17,6 +17,7 @@ interface FormData {
   firstName: string;
   lastName: string;
   email: string;
+  country: string;
   phone: string;
 };
 interface MyContextProps {
@@ -44,6 +45,7 @@ const defaultFormData: FormData = {
   firstName: '',
   lastName: '',
   email: '',
+  country: '',
   phone: '',
 };
 

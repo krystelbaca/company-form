@@ -1,13 +1,15 @@
 'use client';
+
 import { ChangeEvent, FormEvent, useState } from 'react';
 
 import { useMyContext } from '../Context';
 
-import Image from 'next/image';
-
 import styled from 'styled-components';
+interface InputProps {
+  isInvalid?: boolean;
+}
 
-const FormContainer = styled.div`
+const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -16,15 +18,15 @@ const FormContainer = styled.div`
   padding: 1rem;
 `;
 
-const Input = styled.input`
+const Input = styled.input<InputProps>`
   margin-bottom: 1rem;
   padding: 0.5rem;
   font-size: 1rem;
   border-radius: 6px;
-  border: ${(props) => (props.isInvalid ? '2px solid red' : '1px solid #f0f0f0')};
+  border: ${(props) => (props.isInvalid ? '2px solid red' : '1px solid #ccc')};
 `;
 
-const Select = styled.select`
+const Select = styled.select<InputProps>`
   margin-bottom: 1rem;
   padding: 0.5rem;
   font-size: 1rem;
@@ -41,18 +43,22 @@ const Button = styled.button`
   cursor: pointer;
   width: 100%;
   border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const IconWrapper = styled.span`
   margin-left: 0.5rem;
+  display: flex;
   align-items: center;
 `;
 
-const ZipContainer = styled.div`
+const StateContainer = styled.div`
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
-`;
+`
 
 const ErrorMessage = styled.span`
   color: red;
@@ -64,13 +70,13 @@ const ErrorMessage = styled.span`
 
 const BusinessStructure = () => {
   const { 
-    formData,
+    formData, 
     setFormData, 
     nextStep, 
     setCompletedSteps, 
     completedSteps, 
     states, 
-    companyTypes 
+    companyTypes, 
   } = useMyContext();
 
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: boolean }>({});
@@ -78,15 +84,14 @@ const BusinessStructure = () => {
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
-    setValidationErrors((prev) => ({ ...prev, [id]: value }));
+    setValidationErrors((prev) => ({ ...prev, [id]: false }));
   };
 
   const handleContinue = (e: FormEvent) => {
     e.preventDefault();
 
     const newValidationErrors: { [key: string]: boolean } = {};
-    ['businessName', 'type', 'address1', 'city', 'state', 'country', 'zip']
-    .forEach((field) => {
+    ['businessName', 'type', 'address1', 'city', 'state', 'zip'].forEach((field) => {
       if (!formData[field]) {
         newValidationErrors[field] = true;
       }
@@ -117,18 +122,12 @@ const BusinessStructure = () => {
       {validationErrors.businessName && <ErrorMessage>Required field</ErrorMessage>}
 
       <label htmlFor="type">Type</label>
-      <Select
-        id="type"
-        value={formData.type}
-        onChange={handleChange}
-        required
-        isInvalid={validationErrors.type}
-      >
-      <option value="" disabled selected hidden>
-        Type of business
-      </option>
+      <Select id="type" value={formData.type} onChange={handleChange} required isInvalid={validationErrors.type}>
+        <option value="">Select a type</option>
         {companyTypes.map((companyType, index) => (
-          <option key={index} value={companyType}>{companyType}</option>
+          <option key={index} value={companyType}>
+            {companyType}
+          </option>
         ))}
       </Select>
       {validationErrors.type && <ErrorMessage>Required field</ErrorMessage>}
@@ -152,6 +151,7 @@ const BusinessStructure = () => {
         value={formData.address2}
         onChange={handleChange}
       />
+
       <Input
         id="city"
         type="text"
@@ -162,24 +162,18 @@ const BusinessStructure = () => {
         isInvalid={validationErrors.city}
       />
       {validationErrors.city && <ErrorMessage>Required field</ErrorMessage>}
-      <ZipContainer>
-        <Select
-          id="state"
-          value={formData.state}
-          onChange={handleChange}
-          required
-          isInvalid={validationErrors.state}
-        >
-        <option value="" disabled selected hidden>
-          State
-        </option>
-        {states.map((state) => (
-          <option key={state.abbreviation} value={state.abbreviation}>
-            {state.name}
-          </option>
-        ))}
+
+      <label htmlFor="state">State</label>
+      <StateContainer>
+        <Select id="state" value={formData.state} onChange={handleChange} required isInvalid={validationErrors.state}>
+          <option value="">Select a state</option>
+          {states.map((state) => (
+            <option key={state.abbreviation} value={state.abbreviation}>
+              {state.name}
+            </option>
+          ))}
         </Select>
-        {validationErrors.country && <ErrorMessage>Required field</ErrorMessage>}
+        {validationErrors.state && <ErrorMessage>Required field</ErrorMessage>}
 
         <Input
           id="zip"
@@ -189,16 +183,28 @@ const BusinessStructure = () => {
           onChange={handleChange}
           required
           isInvalid={validationErrors.zip}
+          pattern="\d{5}"
         />
         {validationErrors.zip && <ErrorMessage>Required field</ErrorMessage>}
-      </ZipContainer>
-      
+      </StateContainer>
 
-      <Button type='submit'>
-        Continue  
+      <Button type="submit">
+        Continue
         <IconWrapper>
-          <Image src="/Fill/arrow-left.png" alt="Arrow Right" width={16} height={16} />
-        </IconWrapper>   
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-arrow-right"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fillRule="evenodd"
+              d="M1 8a.5.5 0 0 1 .5-.5h11.793L9.146 3.354a.5.5 0 1 1 .708-.708l4.5 4.5a.5.5 0 0 1 0 .708l-4.5 4.5a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
+            />
+          </svg>
+        </IconWrapper>
       </Button>
     </FormContainer>
   );
